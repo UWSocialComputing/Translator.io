@@ -10,7 +10,7 @@ module.exports = {
 		.setDescription('enables auto translations in specified channel')
 		.addStringOption(option =>
 			option.setName('setting')
-                .setDescription('enable or disable auto transalation')
+                .setDescription('enable or disable auto translation')
 				.setRequired(true)
 				.addChoices(
 					{ name: 'enable', value: 'enable' },
