@@ -1,27 +1,28 @@
 const { SlashCommandBuilder } = require('discord.js');
-
-const setTranslations = new Map();
-setTranslations.set("hola", "hello");
-setTranslations.set("hello", "hola");
+const { apiKey } = require('../../config.json');
+const deepl = require('deepl-node');
+const translator = new deepl.Translator(apiKey);
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('translate')
-		.setDescription('\"Translates\" the input')
+		.setDescription('translates input message')
         .addStringOption(option =>
-            option.setName('input')
-                .setDescription('The input to echo back')
-		        .setRequired(true))
-        .addChannelOption(option =>
-            option.setName('channel')
-                .setDescription('The channel to echo into')),
+            option.setName('text')
+                .setDescription('Text to translate')),
 
 	async execute(interaction) {
 		const input = interaction.options.getString("input")
-        if (setTranslations.has(input)) {
-            await interaction.reply("Translating: " + input + "\n" + setTranslations.get(input))
-        } else {
-            await interaction.reply("Translating: " + input + "\nNot implemented")
-        }
+        var output;
+        await translator
+            .translateText(input, null, "fr")
+            .then((result) => {
+                output = result.text
+            })
+            .catch((error) => {
+                console.log(error)
+                output = "Something went wrong";
+            });
+        await interaction.reply({content: "**Original:** " + input + "\n**Translation:** " + output, ephemeral: true})
 	},
 };

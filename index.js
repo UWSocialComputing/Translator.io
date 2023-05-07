@@ -1,7 +1,22 @@
+// General elements
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const { Client, Collection, Events, GatewayIntentBits, Partials } = require('discord.js');
+const { token, apiKey } = require('./config.json');
+
+// Translation elements
+const deepl = require('deepl-node');
+const translator = new deepl.Translator(apiKey);
+
+// Database elements
+const Keyv = require('keyv');
+let server_default_keyv;
+let user_default_keyv;
+let channels_keyv;
+refreshDatabases()
+setInterval(() => {
+	refreshDatabases()
+}, 1000);
 
 const client = new Client({
     intents: [
@@ -10,6 +25,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
     ],
+	partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 client.commands = new Collection();
@@ -37,11 +53,8 @@ client.once(Events.ClientReady, () => {
 // Respond to \ commands
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-
 	const command = client.commands.get(interaction.commandName);
-
 	if (!command) return;
-
 	try {
 		await command.execute(interaction);
 	} catch (error) {
@@ -54,13 +67,37 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-// Respond to any message
+// Auto-translates messages in channels it is enabled in
 client.on(Events.MessageCreate, async msg => {
-	console.log("test");
-	if (msg.content === "ping") {
-	  console.log("ping");
-	  msg.reply("pong");
+	if(msg.author.bot) return;
+	const isEnabled = await channels_keyv.get(msg.channel.id);
+	if (isEnabled) {
+		const defaultLang = await server_default_keyv.get(msg.guild.id);
+		const input = msg.content;
+		var output;
+		await translator
+			.translateText(input, null, defaultLang)
+			.then((result) => {
+				output = result.text
+			})
+			.catch((error) => {
+				console.log(error)
+				output = "Something went wrong";
+			});
+		await msg.reply({content: output, allowedMentions: {repliedUser: false}})
 	}
   });
 
 client.login(token);
+
+function refreshDatabases() {
+	const server_default = path.join(__dirname, 'aux_files/server_default.sqlite')
+	server_default_keyv = new Keyv("sqlite://" + server_default);
+	server_default_keyv.on('error', err => console.error('Keyv connection error:', err));
+	const user_default = path.join(__dirname, 'aux_files/user_default.sqlite')
+	user_default_keyv = new Keyv("sqlite://" + user_default);
+	user_default_keyv.on('error', err => console.error('Keyv connection error:', err));
+	const channels = path.join(__dirname, 'aux_files/channels.sqlite')
+	channels_keyv = new Keyv("sqlite://" + channels);
+	channels_keyv.on('error', err => console.error('Keyv connection error:', err));
+}
