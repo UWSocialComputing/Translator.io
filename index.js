@@ -13,18 +13,18 @@ const Keyv = require('keyv');
 let server_default_keyv;
 let user_default_keyv;
 let channels_keyv;
-refreshDatabases()
+refreshDatabases();
 setInterval(() => {
-	refreshDatabases()
+	refreshDatabases();
 }, 1000);
 
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-    ],
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildMessages,
+	],
 	partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
@@ -40,7 +40,8 @@ for (const folder of commandFolders) {
 		const command = require(filePath);
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
-		} else {
+		}
+		else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
@@ -57,11 +58,13 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (!command) return;
 	try {
 		await command.execute(interaction);
-	} catch (error) {
+	}
+	catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-		} else {
+		}
+		else {
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	}
@@ -69,35 +72,35 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Auto-translates messages in channels it is enabled in
 client.on(Events.MessageCreate, async msg => {
-	if(msg.author.bot) return;
+	if (msg.author.bot) return;
 	const isEnabled = await channels_keyv.get(msg.channel.id);
 	if (isEnabled) {
 		const defaultLang = await server_default_keyv.get(msg.guild.id);
 		const input = msg.content;
-		var output;
+		let output;
 		await translator
 			.translateText(input, null, defaultLang)
 			.then((result) => {
-				output = result.text
+				output = result.text;
 			})
 			.catch((error) => {
-				console.log(error)
-				output = "Something went wrong";
+				console.log(error);
+				output = 'Something went wrong';
 			});
-		await msg.reply({content: output, allowedMentions: {repliedUser: false}})
+		await msg.reply({ content: output, allowedMentions: { repliedUser: false } });
 	}
-  });
+});
 
 client.login(token);
 
 function refreshDatabases() {
-	const server_default = path.join(__dirname, 'aux_files/server_default.sqlite')
-	server_default_keyv = new Keyv("sqlite://" + server_default);
+	const server_default = path.join(__dirname, 'aux_files/server_default.sqlite');
+	server_default_keyv = new Keyv('sqlite://' + server_default);
 	server_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const user_default = path.join(__dirname, 'aux_files/user_default.sqlite')
-	user_default_keyv = new Keyv("sqlite://" + user_default);
+	const user_default = path.join(__dirname, 'aux_files/user_default.sqlite');
+	user_default_keyv = new Keyv('sqlite://' + user_default);
 	user_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const channels = path.join(__dirname, 'aux_files/channels.sqlite')
-	channels_keyv = new Keyv("sqlite://" + channels);
+	const channels = path.join(__dirname, 'aux_files/channels.sqlite');
+	channels_keyv = new Keyv('sqlite://' + channels);
 	channels_keyv.on('error', err => console.error('Keyv connection error:', err));
 }
