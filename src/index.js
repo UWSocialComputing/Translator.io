@@ -78,15 +78,18 @@ client.on(Events.MessageCreate, async msg => {
 		const defaultLang = await server_default_keyv.get(msg.guild.id);
 		const input = msg.content;
 		let output;
-		await translator
-			.translateText(input, null, defaultLang)
-			.then((result) => {
-				output = result.text;
-			})
-			.catch((error) => {
-				console.log(error);
-				output = 'Something went wrong';
-			});
+		try {
+			const result = await translator.translateText(input, null, defaultLang);
+			output = result.text;
+		}
+		catch (error) {
+			console.log(error);
+			output = 'Something went wrong';
+		}
+		console.log('isEnabled: ' + isEnabled);
+		console.log('defaultLang: ' + defaultLang);
+		console.log('input: ' + input);
+		console.log('output: ' + output);
 		await msg.reply({ content: output, allowedMentions: { repliedUser: false } });
 	}
 });
@@ -94,13 +97,13 @@ client.on(Events.MessageCreate, async msg => {
 client.login(token);
 
 function refreshDatabases() {
-	const server_default = path.join(__dirname, 'aux_files/server_default.sqlite');
+	const server_default = path.join(__dirname, './../database/server_default.sqlite');
 	server_default_keyv = new Keyv('sqlite://' + server_default);
 	server_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const user_default = path.join(__dirname, 'aux_files/user_default.sqlite');
+	const user_default = path.join(__dirname, './../database/user_default.sqlite');
 	user_default_keyv = new Keyv('sqlite://' + user_default);
 	user_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const channels = path.join(__dirname, 'aux_files/channels.sqlite');
+	const channels = path.join(__dirname, './../database/channels.sqlite');
 	channels_keyv = new Keyv('sqlite://' + channels);
 	channels_keyv.on('error', err => console.error('Keyv connection error:', err));
 }

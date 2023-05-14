@@ -1,13 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { apiKey } = require('../../config.json');
+const { apiKey } = require('./../../config.json');
 const deepl = require('deepl-node');
 const translator = new deepl.Translator(apiKey);
 
 const path = require('node:path');
 const Keyv = require('keyv');
-const user_default = path.join(__dirname, '../../aux_files/user_default.sqlite');
+const user_default = path.join(__dirname, './../../../database/user_default.sqlite');
 const user_default_keyv = new Keyv('sqlite://' + user_default);
-const server_default = path.join(__dirname, '../../aux_files/server_default.sqlite');
+const server_default = path.join(__dirname, './../../../database/server_default.sqlite');
 const server_default_keyv = new Keyv('sqlite://' + server_default);
 
 module.exports = {

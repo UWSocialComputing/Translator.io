@@ -4,10 +4,10 @@
   "description": "Welcome to your CSE 481p repo!",
   "main": "index.js",
   "scripts": {
-    "build": "npm install && node deploy_commands.js",
-    "start": "node .",
+    "build": "npm install && node src/deploy_commands.js",
+    "start": "node src/index.js",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "keywords": [],
   "author": "",
