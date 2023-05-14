@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
     
     steps:
     - name: Checkout repository
@@ -22,5 +22,20 @@ jobs:
       run: npm install
     - name: Build app
       run: npm run build
+      
+  lint: 
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+    - name: Install dependencies
+      run: npm install
     - name: Lint code
       run: npm run lint
+  
