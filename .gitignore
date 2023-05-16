@@ -2,7 +2,7 @@
 node_modules
 
 # Configuration file
-config.json
+src/config.json
 
 # Databases
 *.sqlite
