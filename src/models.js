@@ -3,7 +3,7 @@ const { connectionString } = './config.json';
 
 const sequelize = new Sequilize(connectionString);
 
-const UsersRegistered = sequelize.define('UserRegistered', {
+const User = sequelize.define('User', {
 	userId: {
 		type: DataTypes.STRING,
 		allowNull: false,
@@ -26,7 +26,7 @@ const UsersRegistered = sequelize.define('UserRegistered', {
 },
 );
 
-const EnabledChannels = sequelize.define('EnabledChannels', {
+const Channel = sequelize.define('Channel', {
 	serverId: {
 		type: DataTypes.STRING,
 		allowNull: false,
@@ -51,5 +51,22 @@ const EnabledChannels = sequelize.define('EnabledChannels', {
 },
 );
 
+const Server = sequelize.define('Server', {
+	serverId: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: true,
+	},
+	defaultLanguage: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+});
 
-module.exports = [UsersRegistered, EnabledChannels];
+Server.hasMany(User, { foreignKey: 'serverId' });
+User.belongsTo(Server, { foreignKey: 'serverId' });
+
+Server.hasMany(Channel, { foreignKey: 'serverId' });
+Channel.belongsTo(Server, { foreignKey: 'serverId' });
+
+module.exports = [User, Channel, Server];
