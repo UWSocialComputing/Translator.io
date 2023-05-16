@@ -3,4 +3,5 @@
     "clientId": "CLIENT-ID",
     "apiKey": "DEEPL-APIKEY",
     "guildId": "GUILD-ID"
+    "connectionString": "CONNECTION-STRING"
 }
