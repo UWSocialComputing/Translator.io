@@ -31,7 +31,7 @@ const EnabledChannels = sequelize.define('EnabledChannels', {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	userId: {
+	channelId: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
