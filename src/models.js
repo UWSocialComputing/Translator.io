@@ -5,11 +5,11 @@ const sequelize = new Sequilize(connectionString);
 
 const UsersRegistered = sequelize.define('UserRegistered', {
 	userId: {
-		type: DataTypes.INTEGER,
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
 	serverId: {
-		type: DataTypes.INTEGER,
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
 	language: {
@@ -28,11 +28,11 @@ const UsersRegistered = sequelize.define('UserRegistered', {
 
 const EnabledChannels = sequelize.define('EnabledChannels', {
 	serverId: {
-		type: DataTypes.INTEGER,
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
 	userId: {
-		type: DataTypes.INTEGER,
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
 	isEnabled: {
