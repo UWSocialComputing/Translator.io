@@ -1,7 +1,20 @@
-const { Sequilize, DataTypes } = require('sequelize');
-const { connectionString } = './config.json';
+const { Sequelize, DataTypes } = require('sequelize');
+const { database, username, password, dialect, host, port } = require('./config.json');
 
-const sequelize = new Sequilize(connectionString);
+// console.log(connectionString);
+const sequelize = new Sequelize(database, username, password, {
+	dialect: dialect,
+	host: host,
+	port: port,
+});
+
+try {
+	sequelize.authenticate();
+	console.log('Connection was successful');
+}
+catch (error) {
+	console.log('Database connection was not successful: ' + error);
+}
 
 const User = sequelize.define('User', {
 	userId: {
@@ -69,4 +82,4 @@ User.belongsTo(Server, { foreignKey: 'serverId' });
 Server.hasMany(Channel, { foreignKey: 'serverId' });
 Channel.belongsTo(Server, { foreignKey: 'serverId' });
 
-module.exports = [User, Channel, Server];
+module.exports = { User, Channel, Server };
