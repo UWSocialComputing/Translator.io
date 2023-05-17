@@ -1,8 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-// const path = require('node:path');
-// const Keyv = require('keyv');
-// const channels = path.join(__dirname, './../../../database/channels.sqlite');
-// const channels_keyv = new Keyv('sqlite://' + channels);
 const { Channel } = require('./../../models');
 
 module.exports = {
