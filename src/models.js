@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { database, username, password, dialect, host, port } = require('./config.json');
 
-// console.log(connectionString);
 const sequelize = new Sequelize(database, username, password, {
 	dialect: dialect,
 	host: host,
@@ -20,47 +19,34 @@ const User = sequelize.define('User', {
 	userId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		primaryKey: true,
 	},
 	serverId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		primaryKey: true,
 	},
 	language: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	} },
-{
-	indexes: [
-		{
-			unique: true,
-			fields: ['userId', 'serverId'],
-		},
-	],
-},
 );
 
 const Channel = sequelize.define('Channel', {
 	serverId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		primaryKey: true,
 	},
 	channelId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		primaryKey: true,
 	},
 	isEnabled: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
 	},
-},
-{
-	indexes: [
-		{
-			unique: true,
-			fields: ['serverId', 'userId'],
-
-		},
-	],
 },
 );
 
@@ -68,7 +54,7 @@ const Server = sequelize.define('Server', {
 	serverId: {
 		type: DataTypes.STRING,
 		allowNull: false,
-		unique: true,
+		primaryKey: true,
 	},
 	defaultLanguage: {
 		type: DataTypes.STRING,
