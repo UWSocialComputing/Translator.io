@@ -1,10 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const path = require('node:path');
-const Keyv = require('keyv');
-const server_default = path.join(__dirname, './../../../database/server_default.sqlite');
-const server_default_keyv = new Keyv('sqlite://' + server_default);
-const languageFile = path.join(__dirname, './../../../resource/languages.json');
-const languages = require(languageFile);
+const { Server } = require('./../../models');
+const languages = require('./../../../resource/languages.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,12 +12,16 @@ module.exports = {
 				.setRequired(true)),
 
 	async execute(interaction) {
-		const input = interaction.options.getString('language');
+		const language = interaction.options.getString('language').toUpperCase();
+		const serverId = interaction.guildId;
 
 		// eslint-disable-next-line no-prototype-builtins
-		if (languages.hasOwnProperty(input)) {
-			await server_default_keyv.set(interaction.guild.id, input);
-			await interaction.reply('Set server default to ' + languages[input]);
+		if (languages.hasOwnProperty(language)) {
+			await Server.upsert({
+				serverId: serverId,
+				defaultLanguage: language,
+			});
+			await interaction.reply('Set server default to ' + languages[language]);
 		}
 		else {
 			await interaction.reply('Invalid input language');
