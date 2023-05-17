@@ -69,11 +69,11 @@ client.on(Events.MessageCreate, async msg => {
 	const serverId = msg.guildId;
 	const channelId = msg.channelId;
 	const userId = msg.author.id;
-	const channelEnabled = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
-	if (channelEnabled == null) {
+	const channel = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
+	if (channel == null) {
 		return;
 	}
-	if (channelEnabled['isEnabled']) {
+	if (channel['isEnabled']) {
 		const user = await User.findOne({ where: { userId: userId, serverId: serverId } });
 		const server = await Server.findOne({ where: { serverId: serverId } });
 		let targetLang;
