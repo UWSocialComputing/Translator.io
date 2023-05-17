@@ -16,7 +16,7 @@ module.exports = {
 
 	async execute(interaction) {
 		const setting = interaction.options.getString('setting');
-		const isEnabled = setting == 'enabled';
+		const isEnabled = setting == 'enable';
 		const channelId = interaction.channelId;
 		const serverId = interaction.guildId;
 		let replyMessage;
