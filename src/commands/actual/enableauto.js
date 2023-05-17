@@ -1,8 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const path = require('node:path');
-const Keyv = require('keyv');
-const channels = path.join(__dirname, './../../../database/channels.sqlite');
-const channels_keyv = new Keyv('sqlite://' + channels);
+const { Channel } = require('./../../models');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,13 +16,21 @@ module.exports = {
 
 	async execute(interaction) {
 		const setting = interaction.options.getString('setting');
-		if (setting == 'enable') {
-			await channels_keyv.set(interaction.channel.id, 1);
-			await interaction.reply('Bot will now translate automatically in this channel');
+		const isEnabled = setting == 'enable';
+		const channelId = interaction.channelId;
+		const serverId = interaction.guildId;
+		let replyMessage;
+		await Channel.upsert({
+			serverId: serverId,
+			channelId: channelId,
+			isEnabled: isEnabled,
+		});
+		if (isEnabled) {
+			replyMessage = 'Bot will now translate automatically in this channel';
 		}
 		else {
-			await channels_keyv.delete(interaction.channel.id);
-			await interaction.reply('Bot will stop translating automatically in this channel');
+			replyMessage = 'Bot will stop translating automatically in this channel';
 		}
+		await interaction.reply(replyMessage);
 	},
 };

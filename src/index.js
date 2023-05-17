@@ -8,15 +8,8 @@ const { token, apiKey } = require('./config.json');
 const deepl = require('deepl-node');
 const translator = new deepl.Translator(apiKey);
 
-// Database elements
-const Keyv = require('keyv');
-let server_default_keyv;
-let user_default_keyv;
-let channels_keyv;
-refreshDatabases();
-setInterval(() => {
-	refreshDatabases();
-}, 1000);
+// sequilize elements
+const { User, Channel, Server } = require('./models');
 
 const client = new Client({
 	intents: [
@@ -44,8 +37,11 @@ for (const file of files) {
 	}
 }
 
-client.once(Events.ClientReady, () => {
-	console.log('Ready!');
+client.once(Events.ClientReady, async () => {
+	await Server.sync();
+	await Channel.sync();
+	await User.sync();
+	console.log('Bot is ready!');
 });
 
 // Respond to \ commands
@@ -70,37 +66,40 @@ client.on(Events.InteractionCreate, async interaction => {
 // Auto-translates messages in channels it is enabled in
 client.on(Events.MessageCreate, async msg => {
 	if (msg.author.bot) return;
-	const isEnabled = await channels_keyv.get(msg.channel.id);
-	if (isEnabled) {
-		const defaultLang = await server_default_keyv.get(msg.guild.id);
-		const input = msg.content;
+	const serverId = msg.guildId;
+	const channelId = msg.channelId;
+	const userId = msg.author.id;
+	const channel = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
+	if (channel == null) {
+		return;
+	}
+	if (channel['isEnabled']) {
+		const user = await User.findOne({ where: { userId: userId, serverId: serverId } });
+		const server = await Server.findOne({ where: { serverId: serverId } });
+		let targetLang;
+		let input = msg.content;
 		let output;
+		if (user != null) {
+			targetLang = user['language'];
+		}
+		else if (server != null) {
+			targetLang = server['defaultLanguage'];
+			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+		}
+		else {
+			targetLang = 'EN-US';
+			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+		}
 		try {
-			const result = await translator.translateText(input, null, defaultLang);
+			const result = await translator.translateText(input, null, targetLang);
 			output = result.text;
 		}
 		catch (error) {
 			console.log(error);
-			output = 'Something went wrong';
+			output = 'Sorry, there is a problem with our translator.';
 		}
-		console.log('isEnabled: ' + isEnabled);
-		console.log('defaultLang: ' + defaultLang);
-		console.log('input: ' + input);
-		console.log('output: ' + output);
 		await msg.reply({ content: output, allowedMentions: { repliedUser: false } });
 	}
 });
 
 client.login(token);
-
-function refreshDatabases() {
-	const server_default = path.join(__dirname, './../database/server_default.sqlite');
-	server_default_keyv = new Keyv('sqlite://' + server_default);
-	server_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const user_default = path.join(__dirname, './../database/user_default.sqlite');
-	user_default_keyv = new Keyv('sqlite://' + user_default);
-	user_default_keyv.on('error', err => console.error('Keyv connection error:', err));
-	const channels = path.join(__dirname, './../database/channels.sqlite');
-	channels_keyv = new Keyv('sqlite://' + channels);
-	channels_keyv.on('error', err => console.error('Keyv connection error:', err));
-}

@@ -1,10 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const path = require('node:path');
-const Keyv = require('keyv');
-const user_default = path.join(__dirname, './../../../database/user_default.sqlite');
-const user_default_keyv = new Keyv('sqlite://' + user_default);
-const languageFile = path.join(__dirname, './../../../resource/languages.json');
-const languages = require(languageFile);
+const languages = require('./../../../resource/languages.json');
+const { User } = require('./../../models');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,10 +12,17 @@ module.exports = {
 				.setRequired(true)),
 
 	async execute(interaction) {
-		const input = interaction.options.getString('language');
+		const input = interaction.options.getString('language').toUpperCase();
 		// eslint-disable-next-line no-prototype-builtins
-		if (languages.hasOwnProperty(input)) {
-			await user_default_keyv.set(interaction.user.id, input);
+		const languageExists = languages.hasOwnProperty(input);
+		const userId = interaction.user.id;
+		const serverId = interaction.guildId;
+		if (languageExists) {
+			await User.upsert({
+				serverId: serverId,
+				userId: userId,
+				language: input,
+			});
 			await interaction.reply({ content: 'You have registered for the ' + languages[input] + ' language', ephemeral: true });
 		}
 		else {
