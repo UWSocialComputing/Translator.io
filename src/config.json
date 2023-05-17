@@ -3,10 +3,10 @@
     "clientId": "YOUR-DISCORD-CLIENT-ID",
     "apiKey": "YOUR-DEEPL-APIKEY",
     "guildId": "YOUR-DEVELOPMENT-GUILD-ID",
-    "dialect": "mssql",
+    "dialect": "DIALECT",
     "host": "HOSTNAME",
     "database": "DATABASE-NAME",
     "username": "USERNAME",
     "password": "PASSWORD",
-    "port": 1433
+    "port": 9999
 }
