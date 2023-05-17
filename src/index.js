@@ -38,6 +38,9 @@ for (const file of files) {
 }
 
 client.once(Events.ClientReady, async () => {
+	await Server.sync();
+	await Channel.sync();
+	await User.sync();
 	console.log('Bot is ready!');
 });
 
