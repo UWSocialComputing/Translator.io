@@ -6,10 +6,12 @@ module.exports = {
 		.setName('helplanguage')
 		.setDescription('Displays a set of supported languages'),
 	async execute(interaction) {
-		let result = 'Language Id - Language Name\n';
+		let result = '```\nLanguage Id: Language Name\n--------------------------\n';
 		for (const language in languages) {
-			result += `${language} - ${languages[language]}\n`;
+			result += `${language}: ${languages[language]}\n`;
 		}
-		return interaction.reply({ content: result, ephemeral: true });
+		result += "```"
+		interaction.user.send({ content: result });
+		return interaction.reply({ content: "I have DM'd you a list of supported languages", ephemeral: true });
 	},
 };
