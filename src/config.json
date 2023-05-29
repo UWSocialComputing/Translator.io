@@ -1,12 +1,1 @@
-{
-    "token": "YOUR-DISCORD-APPLICATION-TOKEN",
-    "clientId": "YOUR-DISCORD-CLIENT-ID",
-    "apiKey": "YOUR-DEEPL-APIKEY",
-    "guildId": "YOUR-DEVELOPMENT-GUILD-ID",
-    "dialect": "DIALECT",
-    "host": "HOSTNAME",
-    "database": "DATABASE-NAME",
-    "username": "USERNAME",
-    "password": "PASSWORD",
-    "port": 9999
-}
+

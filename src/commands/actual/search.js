@@ -3,43 +3,43 @@ const languages = require('./../../../resource/languages.json');
 const { User, Channel, Server, Searchable } = require('./../../models');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('search')
-        .setDescription('See every user who has registered for a language')
-        .addStringOption(option =>
-            option.setName('language')
-                .setDescription('Language to look up')
-                .setRequired(true)),
-    async execute(interaction) {
-        const userId = interaction.user.id;
-        const serverId = interaction.guildId;
-        const languageQuery = interaction.options.getString('language').toUpperCase();
+	data: new SlashCommandBuilder()
+		.setName('search')
+		.setDescription('See every user who has registered for a language')
+		.addStringOption(option =>
+			option.setName('language')
+				.setDescription('Language to look up')
+				.setRequired(true)),
+	async execute(interaction) {
+		const userId = interaction.user.id;
+		const serverId = interaction.guildId;
+		const languageQuery = interaction.options.getString('language').toUpperCase();
 
-        if (languages[languageQuery] === undefined) {
-            await interaction.reply({ content: 'Invalid input language', ephemeral: true });
-            return;
-        }
+		if (languages[languageQuery] === undefined) {
+			await interaction.reply({ content: 'Invalid input language', ephemeral: true });
+			return;
+		}
 
-        const output = await User.findAll({ where: { serverId: serverId, language: languageQuery } });
+		const output = await User.findAll({ where: { serverId: serverId, language: languageQuery } });
 
-        let users = ''
-        for (i = 0; i < output.length; i++) {
-            const queryUserId = output[i].userId
-            users = users + `<@${queryUserId}>\n`
+		let users = '';
+		for (i = 0; i < output.length; i++) {
+			const queryUserId = output[i].userId;
+			users = users + `<@${queryUserId}>\n`;
 
-            // Switch in when Searchable DB works
-            // const isAllowed = await Searchable.findOne({ where: { serverId: serverId, userId: queryUserId } });
-            // if (isAllowed.length != 0) {
-            //     users = users + `<@${queryUserId}>\n`
-            // }
-        }
+			// Switch in when Searchable DB works
+			// const isAllowed = await Searchable.findOne({ where: { serverId: serverId, userId: queryUserId } });
+			// if (isAllowed.length != 0) {
+			//     users = users + `<@${queryUserId}>\n`
+			// }
+		}
 
-        embed = {
-            color: 0x0099ff,
-            title: 'Search',
-            fields: [{"name": 'Users in this server who registered for ' + languages[languageQuery], "value": users}],
-        };
+		embed = {
+			color: 0x0099ff,
+			title: 'Search',
+			fields: [{ 'name': 'Users in this server who registered for ' + languages[languageQuery], 'value': users }],
+		};
 
-        await interaction.reply({ embeds: [embed] });
-    },
+		await interaction.reply({ embeds: [embed] });
+	},
 };
