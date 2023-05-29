@@ -1,3 +1,18 @@
+// Logging
+const log4js = require('log4js');
+
+log4js.configure({
+	appenders: {
+		out: { type: 'console' },
+		app: { type: 'file', filename: 'logs/index.log', category: 'index' },
+	},
+	categories: {
+		default: { appenders: ['out', 'app'], level: 'debug' },
+	},
+});
+
+const logger = log4js.getLogger('index');
+
 // General elements
 const fs = require('node:fs');
 const path = require('node:path');
@@ -66,41 +81,55 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Auto-translates messages in channels it is enabled in
 client.on(Events.MessageCreate, async msg => {
-    if (msg.author.bot) return;
-    const serverId = msg.guildId;
-    const channelId = msg.channelId;
-    const userId = msg.author.id;
-    const channel = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
-    if (channel == null) {
-        return;
-    }
-    if (channel['isEnabled']) {
-        const user = await User.findOne({ where: { userId: userId, serverId: serverId } });
-        const server = await Server.findOne({ where: { serverId: serverId } });
-        let targetLang;
-        let input = msg.content;
-        let output;
-        if (user != null) {
-            targetLang = user['language'];
-        }
-        else if (server != null) {
-            targetLang = server['defaultLanguage'];
-            input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
-        }
-        else {
-            targetLang = 'EN-US';
-            input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
-        }
-        try {
-            const result = await translator.translateText(input, null, targetLang);
-            output = result.text;
-        }
-        catch (error) {
-            console.log(error);
-            output = 'Sorry, there is a problem with our translator.';
-        }
-        await msg.reply({ content: output, allowedMentions: { repliedUser: false } });
-    }
+	if (msg.author.bot) return;
+	const serverId = msg.guildId;
+	const channelId = msg.channelId;
+
+	const channel = await client.channels.fetch(channelId);
+	
+	const members = channel.members;
+	
+
+	for (const member in members) {
+		await sendTranslationToUser(msg, serverId, channelId, member.id);
+	}
+
+	
 });
+
+async function sendTranslationToUser(msg, serverId, channelId, targetUserId) {
+	const channel = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
+	if (channel == null) {
+		return;
+	}
+	if (channel['isEnabled']) {
+		const user = await User.findOne({ where: { userId: targetUserId, serverId: serverId } });
+		const server = await Server.findOne({ where: { serverId: serverId } });
+		let targetLang;
+		let input = msg.content;
+		let output;
+		if (user != null) {
+			targetLang = user['language'];
+		}
+		else if (server != null) {
+			targetLang = server['defaultLanguage'];
+			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+		}
+		else {
+			targetLang = 'EN-US';
+			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+		}
+		try {
+			const result = await translator.translateText(input, null, targetLang);
+			output = result.text;
+		}
+		catch (error) {
+			console.log(error);
+			output = 'Sorry, there is a problem with our translator.';
+		}
+		await client.users.send(targetUserId, output);
+		// await msg.reply({ content: output, allowedMentions: { repliedUser: false } });
+	}
+}
 
 client.login(token);

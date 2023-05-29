@@ -21,6 +21,7 @@
     "discord-api-types": "^0.37.40",
     "discord.js": "^14.10.2",
     "keyv": "^4.5.2",
+    "log4js": "^6.9.1",
     "sequelize": "^6.31.1",
     "sqlite3": "^5.1.6",
     "tedious": "^16.1.0"

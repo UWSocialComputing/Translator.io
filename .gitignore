@@ -3,6 +3,11 @@ node_modules
 
 # Configuration file
 src/config.json
+config
 
 # Databases
 *.sqlite
+migrations
+
+# Logging
+logs

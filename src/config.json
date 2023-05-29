@@ -1,12 +1,12 @@
 {
-    "token": "YOUR-DISCORD-APPLICATION-TOKEN",
-    "clientId": "YOUR-DISCORD-CLIENT-ID",
-    "apiKey": "YOUR-DEEPL-APIKEY",
-    "guildId": "YOUR-DEVELOPMENT-GUILD-ID",
-    "dialect": "DIALECT",
-    "host": "HOSTNAME",
-    "database": "DATABASE-NAME",
-    "username": "USERNAME",
-    "password": "PASSWORD",
-    "port": 9999
+    "token": "MTEwNzM2MjQ3Mjg3NDIyNTc3Ng.GjbhvD.ME5CKk1dzg1_TsIptOhhitskEu4AofCImcadq0",
+    "clientId": "1107362472874225776",
+    "apiKey": "3c436f9e-2c2d-1d81-6833-717ab904d933:fx",
+    "guildId": "1059002371310633000",
+    "dialect": "mssql",
+    "host": "translator-io-server.database.windows.net",
+    "database": "translator-io-db",
+    "username": "translator-io-admin",
+    "password": "OurDiscordBot21",
+    "port": 1433
 }
