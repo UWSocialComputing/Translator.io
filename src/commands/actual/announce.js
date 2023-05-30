@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const { apiKey } = require('./../../config.json');
 const deepl = require('deepl-node');
 const translator = new deepl.Translator(apiKey);
-const { User, Server } = require('./../../models');
+const { Server } = require('./../../models');
 const flags = require('./../../../resource/flags.json');
 
 module.exports = {
@@ -30,8 +30,6 @@ module.exports = {
 			languageArray = splitlanguages.filter(s => s !== '');
 		}
 
-		const output = '';
-		let message = '';
 		const userId = interaction.user.id;
 		const serverId = interaction.guildId;
 		const server = await Server.findOne({ where: { serverId: serverId } });
@@ -42,14 +40,13 @@ module.exports = {
 			}
 			else {
 				languageArray = ['EN'];
-				message = '\n*User language and server default not set, using English';
 			}
 		}
 		let embed;
 
 		try {
 			const translations = [];
-			for (i = 0; i < languageArray.length; i++) {
+			for (let i = 0; i < languageArray.length; i++) {
 				const translation = await translator.translateText(input, null, languageArray[i]);
 				translations.push({ 'name': flags[languageArray[i]], 'value': translation.text });
 			}

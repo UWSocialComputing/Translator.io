@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const languages = require('./../../../resource/languages.json');
-const { User, Channel, Server, Searchable } = require('./../../models');
+const { User } = require('./../../models');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,7 +11,6 @@ module.exports = {
 				.setDescription('Language to look up')
 				.setRequired(true)),
 	async execute(interaction) {
-		const userId = interaction.user.id;
 		const serverId = interaction.guildId;
 		const languageQuery = interaction.options.getString('language').toUpperCase();
 
@@ -23,7 +22,7 @@ module.exports = {
 		const output = await User.findAll({ where: { serverId: serverId, language: languageQuery } });
 
 		let users = '';
-		for (i = 0; i < output.length; i++) {
+		for (let i = 0; i < output.length; i++) {
 			const queryUserId = output[i].userId;
 			users = users + `<@${queryUserId}>\n`;
 
@@ -34,7 +33,7 @@ module.exports = {
 			// }
 		}
 
-		embed = {
+		const embed = {
 			color: 0x0099ff,
 			title: 'Search',
 			fields: [{ 'name': 'Users in this server who registered for ' + languages[languageQuery], 'value': users }],

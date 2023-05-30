@@ -1,22 +1,3 @@
-// Logging
-const log4js = require('log4js');
-
-log4js.configure({
-	appenders: {
-		out: { type: 'console' },
-		app: {
-			type: 'file',
-			filename: 'logs/index.log',
-			category: 'index',
-		},
-	},
-	categories: {
-		default: { appenders: ['out', 'app'], level: 'debug' },
-	},
-});
-
-const logger = log4js.getLogger('index');
-
 // General elements
 const fs = require('node:fs');
 const path = require('node:path');
@@ -91,19 +72,9 @@ client.on(Events.MessageCreate, async msg => {
 	const channel = await client.channels.fetch(channelId);
 	const members = channel.members;
 
-	// logger.info('Entering Auto-Translate ...');
-	// logger.info(`Size of members: ${members.size}`);
 	for (const member of members.values()) {
-		logger.info(`member name ${member.user.username}`);
-		if (member.user.username == 'Translator.io') {
-			// logger.info('Skipping Translator.io ...');
-			continue;
-		}
-		if (member.id == msg.member.id) {
-			// logger.info('Skipping original sender ...');
-			continue;
-		}
-		// logger.info(`Translating for ${member.id}`);
+		if (member.user.username == 'Translator.io') continue;
+		if (member.id == msg.member.id) continue;
 		await sendTranslationToUser(msg, serverId, channelId, member.id);
 	}
 
@@ -139,7 +110,6 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUserId) {
 			console.log(error);
 			output = 'Sorry, there is a problem with our translator.';
 		}
-		// logger.info(`Sending translation to ${targetUserId}, output : ${output}`);
 		await client.users.send(targetUserId, output);
 	}
 }

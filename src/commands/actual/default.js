@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { Server } = require('./../../models');
 const languages = require('./../../../resource/languages.json');
 
@@ -9,7 +9,8 @@ module.exports = {
 		.addStringOption(option =>
 			option.setName('language')
 				.setDescription('default language')
-				.setRequired(true)),
+				.setRequired(true))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 	async execute(interaction) {
 		const language = interaction.options.getString('language').toUpperCase();

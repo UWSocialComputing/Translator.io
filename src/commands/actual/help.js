@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const languages = require('./../../../resource/languages.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
