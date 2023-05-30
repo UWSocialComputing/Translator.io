@@ -1,6 +1,7 @@
 // General elements
 const fs = require('node:fs');
 const path = require('node:path');
+const flags = require('./../resource/flags.json');
 const { Client, Collection, Events, GatewayIntentBits, Partials } = require('discord.js');
 const { token, apiKey } = require('./config.json');
 
@@ -72,15 +73,19 @@ client.on(Events.MessageCreate, async msg => {
 	const channel = await client.channels.fetch(channelId);
 	const members = channel.members;
 
+	console.log('Entering auto translation ...');
+
 	for (const member of members.values()) {
 		if (member.user.username == 'Translator.io') continue;
 		if (member.id == msg.member.id) continue;
-		await sendTranslationToUser(msg, serverId, channelId, member.id);
+		console.log(`Sending translation for ${member.user.username}`);
+		await sendTranslationToUser(msg, serverId, channelId, member);
 	}
 
 });
 
-async function sendTranslationToUser(msg, serverId, channelId, targetUserId) {
+async function sendTranslationToUser(msg, serverId, channelId, targetUser) {
+	const targetUserId = targetUser.id;
 	const channel = await Channel.findOne({ where: { serverId: serverId, channelId: channelId } });
 	if (channel == null) {
 		return;
@@ -89,28 +94,68 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUserId) {
 		const user = await User.findOne({ where: { userId: targetUserId, serverId: serverId } });
 		const server = await Server.findOne({ where: { serverId: serverId } });
 		let targetLang;
-		let input = msg.content;
-		let output;
+		const inputs = [
+			msg.content,
+			'Automatic Translation',
+			'Translation for',
+			'Server name',
+			'Channel name',
+			'Original Message from',
+			'Translated message for'];
+		const outputs = [];
 		if (user != null) {
 			targetLang = user['language'];
 		}
 		else if (server != null) {
 			targetLang = server['defaultLanguage'];
-			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+			inputs[0] += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
 		}
 		else {
 			targetLang = 'EN-US';
-			input += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
+			inputs[0] += '\n[You have not registered a language. Use the /register command to register your preferred language.]';
 		}
 		try {
-			const result = await translator.translateText(input, null, targetLang);
-			output = result.text;
+			for (let i = 0; i < inputs.length; i++) {
+				const result = await translator.translateText(inputs[i], null, targetLang);
+				outputs.push(result.text);
+				console.log(`result.text: ${result.text}`);
+			}
 		}
 		catch (error) {
 			console.log(error);
-			output = 'Sorry, there is a problem with our translator.';
+			outputs[0] = 'Sorry, there is a problem with our translator.';
 		}
-		await client.users.send(targetUserId, output);
+		const embed = {
+			color: 0x0099ff,
+			// Automatic Translation
+			title: `${outputs[1]} ${flags[targetLang]}`,
+			// EX: 'Translation for nameOfTargetUser'
+			description: `${outputs[2]} ${targetUser.user.username}`,
+			fields: [
+				{
+					// Server Name
+					name: `${outputs[3]}`,
+					value: `${msg.guild.name}`,
+				},
+				{
+					// Channel Name
+					name: `${outputs[4]}`,
+					value: `${msg.channel.name}`,
+				},
+				{
+					// Ex: Original Message from nameOfOriginalUser
+					name: `${outputs[5]} ${msg.member.user.username}`,
+					value: `${inputs[0]}`,
+				},
+				{
+					// Ex: Translated Message for nameOfTargetUser
+					name: `${outputs[6]} ${targetUser.user.username}`,
+					value: `${outputs[0]}`,
+				},
+			],
+		};
+		await client.users.send(targetUserId, { embeds: [embed] });
+		console.log(`Translation sent for ${targetUser.user.username}`);
 	}
 }
 

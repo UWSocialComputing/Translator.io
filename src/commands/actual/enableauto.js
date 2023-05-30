@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { Channel } = require('./../../models');
 
 module.exports = {
@@ -12,8 +12,7 @@ module.exports = {
 				.addChoices(
 					{ name: 'enable', value: 'enable' },
 					{ name: 'disable', value: 'disable' },
-				))
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+				)),
 
 	async execute(interaction) {
 		const setting = interaction.options.getString('setting');
