@@ -24,13 +24,11 @@ module.exports = {
 		let users = '';
 		for (let i = 0; i < output.length; i++) {
 			const queryUserId = output[i].userId;
-			users = users + `<@${queryUserId}>\n`;
 
-			// Switch in when Searchable DB works
-			// const isAllowed = await Searchable.findOne({ where: { serverId: serverId, userId: queryUserId } });
-			// if (isAllowed.length != 0) {
-			//     users = users + `<@${queryUserId}>\n`
-			// }
+			const userEntry = await User.findOne({ where: { serverId: serverId, userId: queryUserId } });
+			if (userEntry != null && userEntry['searchable']) {
+				users = users + `<@${queryUserId}>\n`;
+			}
 		}
 
 		const embed = {
