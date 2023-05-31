@@ -95,7 +95,7 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUser) {
 		const inputs = [
 			msg.content,
 			'Automatic Translation',
-			'Translation for',
+			'Link to message',
 			'Server name',
 			'Channel name',
 			'Original Message from',
@@ -126,8 +126,8 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUser) {
 			color: 0x0099ff,
 			// Automatic Translation
 			title: `${outputs[1]} ${flags[targetLang]}`,
-			// EX: 'Translation for nameOfTargetUser'
-			description: `${outputs[2]} ${targetUser.user.username}`,
+			// EX: 'Link to message: for nameOfTargetUser'
+			description: `${outputs[2]}: ${msg.url}`,
 			fields: [
 				{
 					// Server Name
