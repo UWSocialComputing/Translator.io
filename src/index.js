@@ -73,12 +73,10 @@ client.on(Events.MessageCreate, async msg => {
 	const channel = await client.channels.fetch(channelId);
 	const members = channel.members;
 
-	console.log('Entering auto translation ...');
 
 	for (const member of members.values()) {
 		if (member.user.username == 'Translator.io') continue;
 		if (member.id == msg.member.id) continue;
-		console.log(`Sending translation for ${member.user.username}`);
 		await sendTranslationToUser(msg, serverId, channelId, member);
 	}
 
@@ -118,7 +116,6 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUser) {
 			for (let i = 0; i < inputs.length; i++) {
 				const result = await translator.translateText(inputs[i], null, targetLang);
 				outputs.push(result.text);
-				console.log(`result.text: ${result.text}`);
 			}
 		}
 		catch (error) {
@@ -155,7 +152,6 @@ async function sendTranslationToUser(msg, serverId, channelId, targetUser) {
 			],
 		};
 		await client.users.send(targetUserId, { embeds: [embed] });
-		console.log(`Translation sent for ${targetUser.user.username}`);
 	}
 }
 
