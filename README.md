@@ -84,4 +84,5 @@ Running Translator.io
 
 ## Development Process
 
-
+### [G1: User Research](./blogs/G1.md)
+### [G2: Project Pitch](https://docs.google.com/presentation/d/15AAj9f3JPDKbosOj8uM7ldyVM1aqtMNwjxjhfv6peaE/edit?usp=sharing)
