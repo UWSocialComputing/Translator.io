@@ -86,3 +86,7 @@ Running Translator.io
 
 ### [G1: User Research](./blogs/G1.md)
 ### [G2: Project Pitch](https://docs.google.com/presentation/d/15AAj9f3JPDKbosOj8uM7ldyVM1aqtMNwjxjhfv6peaE/edit?usp=sharing)
+### [G3: Low Fidelity Prototype](./blogs/G3.md)
+### [G3: Code and Design Specification](./blogs/G4.md)
+
+
