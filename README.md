@@ -1,3 +1,4 @@
+# Translator.io
 ## Overview 
 
 Translator.IO is a powerful Discord bot designed to overcome language barriers within Discord servers. With Translator.IO, you can effortlessly communicate with users from different linguistic backgrounds, enabling inclusive and engaging conversations. Key features include:
@@ -13,6 +14,11 @@ Translator.IO is a powerful Discord bot designed to overcome language barriers w
 Translator.IO is an indispensable tool for diverse communities, international teams, language learners, and anyone looking to bridge language gaps on Discord. Experience the joy of smooth multilingual communication with Translator.IO today!
 
 Get started with Translator.IO and create a more inclusive and connected Discord server.
+
+## Video Demonstration
+
+[Click here to watch the video!](https://www.youtube.com/watch?v=zJI_qETQ3hQ)
+
 
 ## How to setup
 
@@ -71,16 +77,11 @@ Running Translator.io
 - Run `npm run start` to start running the bot.
 
 
-## Using Translator.io in your Discord Server
+## How to use Translator.io in your Discord Server
 
 - Here is the invite link for Translator.io: `https://tinyurl.com/translator-io`.
 - Add it to your desired Discord Server
 
+## Development Process
 
-This repo will serve as a place to both collaborate on code with your group members as well as create your blog sites for your projects. It contains a `_config.yml` file that automatically turns your `README.md` files into webpages hosted on GitHub pages. 
 
-Please refer to the README in [this repo](https://github.com/nicolas-van/easy-markdown-to-github-pages) for more on the markdown to webpage generation process. Most of the steps have already been done for you, so the most relevant content will likely be in the User Guide and the sections following that. 
-
-If you want to change the site's Jekyll template and/or add custom CSS, please refer to [this guide](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll).
-
-You may also find this [GitHub markdown cheatsheet](https://www.markdownguide.org/cheat-sheet) handy.
