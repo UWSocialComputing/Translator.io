@@ -11,3 +11,6 @@ migrations
 
 # Logging
 logs
+
+# models file
+models
