@@ -1,6 +1,6 @@
-# Translator.io
+![image](https://github.com/UWSocialComputing/Translator.io/assets/69612398/44dd2143-6b70-4267-bf04-96a79892ca76)
 
-## Overview 
+## Translator.io 
 
 Translator.IO is a powerful Discord bot designed to overcome language barriers within Discord servers. With Translator.IO, you can effortlessly communicate with users from different linguistic backgrounds, enabling inclusive and engaging conversations. Key features include:
 
