@@ -1,4 +1,4 @@
-# 
+# Translator.io
 
 ## Overview 
 
@@ -89,5 +89,9 @@ Running Translator.io
 ### [G2: Project Pitch](https://docs.google.com/presentation/d/15AAj9f3JPDKbosOj8uM7ldyVM1aqtMNwjxjhfv6peaE/edit?usp=sharing)
 ### [G3: Low Fidelity Prototype](./blogs/G3.md)
 ### [G4: Code and Design Specification](./blogs/G4.md)
+### [G5: Midterm Presentation](https://docs.google.com/presentation/d/1OZi9EQQCjIpiRRAe_1f2NFzdRm8dBWnkrKa6_Ye4A8I/edit?usp=sharing)
+### [G6: User Testing](./blogs/G6.md)
+### [G7: Digital Prototype](./blogs/G7.md)
+### [G8: Video Demo](https://www.youtube.com/watch?v=zJI_qETQ3hQ)
 
 
