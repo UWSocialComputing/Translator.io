@@ -18,7 +18,7 @@ Get started with Translator.IO and create a more inclusive and connected Discord
 
 ## Video Demonstration
 
-[Click here to watch the video!](https://www.youtube.com/watch?v=zJI_qETQ3hQ)
+[Click here to watch the video!](https://www.youtube.com/watch?v=W8lPyFsliDs&ab_channel=MichaelWen)
 
 
 ## How to setup
@@ -92,6 +92,6 @@ Running Translator.io
 ### [G5: Midterm Presentation](https://docs.google.com/presentation/d/1OZi9EQQCjIpiRRAe_1f2NFzdRm8dBWnkrKa6_Ye4A8I/edit?usp=sharing)
 ### [G6: User Testing](./blogs/G6.md)
 ### [G7: Digital Prototype](./blogs/G7.md)
-### [G8: Video Demo](https://www.youtube.com/watch?v=zJI_qETQ3hQ)
+### [G8: Video Demo]([https://www.youtube.com/watch?v=zJI_qETQ3hQ](https://www.youtube.com/watch?v=W8lPyFsliDs&ab_channel=MichaelWen))
 
 
